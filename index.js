@@ -3,13 +3,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const mongoose = require('mongoose');
 const seedData = require('./actions/seedData');
+const dbActions = require('./actions/dbActions');
 
 const app = express();
 const PORT = 8080;
-
-mongoose.connect('mongodb://localhost/cardCombine');
 
 app.use(morgan('combined'));
 app.use(bodyParser());
@@ -20,10 +18,32 @@ app.listen(PORT, () => {
 
 app.get('/', (req, res) => {
 	Promise.all([seedData.setUpDeck(), seedData.setUpUser()])
-	.then(values => {
-		res.json(values);
+	.then(result => {
+		res.json(result);
 	})
 	.catch(err => {
 		res.send(err);
 	})
 });
+
+app.get('/users/:username/decks', (req, res) => {
+	dbActions.getDeckListEndPointByUser(req, res)
+	.then((result) => {
+		res.json(result);
+	})
+	.catch((err) => {
+		res.send(err);
+	})
+});
+
+app.get('/decks/:id', (req, res) => {
+	dbActions.getSpecifiedDeckEndPoint(req, res)
+	.then((result) => {
+		res.json(result);
+	})
+	.catch((err) => {
+		res.send(err);
+	})
+});
+
+app.get
