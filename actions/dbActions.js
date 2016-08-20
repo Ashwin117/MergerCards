@@ -7,6 +7,14 @@ const db = mongoose.connection;
 
 module.exports = {
 	getDeckListEndPointByUser(req, res) {
+		let pagination;
+		if (req.query.nextpagetoken < 1) {
+			pagination = Math.ceil(constants.PAGE_LIMIT/2);
+		} else {
+			pagination = parseInt(req.query.nextpagetoken) || Math.ceil(constants.PAGE_LIMIT/2);
+		}
+		const lowerLimit = pagination - (Math.floor(constants.PAGE_LIMIT/2));
+		const upperLimit = pagination + (Math.ceil(constants.PAGE_LIMIT/2));
 		return new Promise((resolve, reject) => {
 			db.collections.users.aggregate([
 			    { $match: {'userName': 'test@example'}},
@@ -14,7 +22,10 @@ module.exports = {
 			    	decks: { $filter: {
 			        	input: '$decks',
 			        	as: 'deck',
-			        	cond: {$lte: ['$$deck.id', constants.PAGE_LIMIT-1]}
+			        	cond: { $and: [
+			        		{ $gte: ['$$deck.id', lowerLimit] },
+			        		{ $lte: ['$$deck.id', upperLimit] }
+			        	]}
 			        }}
 			    }}],
 				(err, result) => {
@@ -22,7 +33,7 @@ module.exports = {
 					reject(err || 500);
 					return;
 				}
-				result[0].nextPageToken = result[0].decks.length < constants.PAGE_LIMIT ? result[0].decks.length+1 : constants.PAGE_LIMIT;
+				result[0].nextPageToken = result[0].decks.length === 1 ? '' : pagination+1;
 				result[0].resultSizeEstimate = result[0].decks.length + constants.PAGE_LIMIT;
 				resolve(result);
 			});
