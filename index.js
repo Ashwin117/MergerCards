@@ -46,4 +46,6 @@ app.get('/decks/:id', (req, res) => {
 	})
 });
 
-app.get
+app.get('/users/:username/combinedecks', (req, res) => {
+
+});
