@@ -7,12 +7,7 @@ const db = mongoose.connection;
 
 module.exports = {
 	getDeckListEndPointByUser(req, res) {
-		let pagination;
-		if (req.query.nextpagetoken < 1) {
-			pagination = Math.ceil(constants.PAGE_LIMIT/2);
-		} else {
-			pagination = parseInt(req.query.nextpagetoken) || Math.ceil(constants.PAGE_LIMIT/2);
-		}
+		const pagination = setPagination(req);
 		const lowerLimit = pagination - (Math.floor(constants.PAGE_LIMIT/2));
 		const upperLimit = pagination + (Math.ceil(constants.PAGE_LIMIT/2));
 		return new Promise((resolve, reject) => {
@@ -50,4 +45,11 @@ module.exports = {
 			});
 		});
 	}
+}
+
+const setPagination = (req) => {
+	if (req.query.nextpagetoken < 1) {
+		return Math.ceil(constants.PAGE_LIMIT/2);
+	}
+	return parseInt(req.query.nextpagetoken) || Math.ceil(constants.PAGE_LIMIT/2);
 }
