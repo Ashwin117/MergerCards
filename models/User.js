@@ -6,9 +6,9 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
 	userName: String,
 	decks: [],
-	id: Number,
-	nextPageToken: Number,
-	resultSizeEstimate: Number 
+	id: String,
+	nextPageToken: String,
+	resultSizeEstimate: String 
 });
 
 const User = mongoose.model('User', userSchema);

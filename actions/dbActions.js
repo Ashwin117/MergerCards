@@ -16,7 +16,7 @@ module.exports = {
 					reject(err || 500);
 					return;
 				}
-				result.nextPageToken = (result.decks.length === 1) ? '' : pagination + 1;
+				result.nextPageToken = (result.decks.length === 1) ? '' : (pagination + 1).toString();
 				resolve(result);
 			});
 		})

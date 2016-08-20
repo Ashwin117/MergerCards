@@ -31,7 +31,7 @@ const generateDecks = () => {
 	indexes.forEach((value) => {
 		generatedDecks.push({
 			desc: 'deck' + value,
-			id: value
+			id: value.toString()
 		});
 	});
 	decksLength = generatedDecks.length;
@@ -60,14 +60,14 @@ function shuffleArray(array) {
 const starterDeck = {
 	cards: generateCards(),
 	desc: 'desc1',
-	id: 1
+	id: '1'
 }
 
 const starterUserDecks = {
 	userName: 'test@example',
 	decks: generateDecks(),
-	nextPageToken: decksLength < 5 ? 0 : constants.PAGE_LIMIT,
-	resultSizeEstimate: decksLength
+	nextPageToken: decksLength < 5 ? '0' : constants.PAGE_LIMIT.toString(),
+	resultSizeEstimate: decksLength.toString()
 }
 
 module.exports = {
