@@ -83,7 +83,7 @@ To view all the decks and the corresponding cards associated with this username.
         {
             "desc": "deck1",
             "id": "1",
-            "_id": "57b98a919295d0f77b93ecf3"
+            "_id": "57b98a919295d0f77b93ecf3",
             "cards": [
                 {
                 	"title": "card1",
