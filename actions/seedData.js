@@ -71,11 +71,33 @@ const starterUserDecks = {
 }
 
 module.exports = {
+	clearDecksFromDB() {
+		return new Promise ((resolve, reject) => {
+			Deck.model.remove({}, (err, result) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve();
+			});
+		});
+	},
+	clearUsersFromDB() {
+		return new Promise ((resolve, reject) => {
+			User.model.remove({}, (err, result) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve();
+			});
+		});
+	},
 	setUpDeck() {
 		return new Promise ((resolve, reject) => {
 			Deck.model.create(starterDeck, (err, result) => {
-				if (err || !result || result.length === 0) {
-					reject(err || 500);
+				if (err) {
+					reject(err);
 					return;
 				}
 				resolve(result);
@@ -85,8 +107,8 @@ module.exports = {
 	setUpUser() {
 		return new Promise((resolve, reject) => {
 			User.model.create(starterUserDecks, (err, result) => {
-				if (err || !result || result.length === 0) {
-					reject(err || 500);
+				if (err) {
+					reject(err);
 					return;
 				}
 				resolve(result);
