@@ -1,15 +1,12 @@
 'use strict';
 
 const seedData = require('../actions/seedData');
+const responseHandler = require('./responseHandler');
 
 const setUp = (req, res) => {
 	Promise.all([seedData.setUpDeck(), seedData.setUpUser()])
-	.then(result => {
-		res.json(result);
-	})
-	.catch(err => {
-		res.send(err);
-	})
+	.then(responseHandler.handleSuccess(res))
+	.catch(responseHandler.handleError(res))
 };
 
 module.exports = {
