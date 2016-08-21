@@ -48,9 +48,12 @@ app.get('/decks/:id', (req, res) => {
 
 app.get('/users/:username/combinedecks', (req, res) => {
 	dbActions.getPagedUserDecks(req, res)
-	.then(result => {
-		debugger;
-		dbActions.resolveDecks(result)
+	.then((result) => {
+		dbActions.resolveCombinedDecks(result[0], result[1])
+		.then(result => {
+			debugger;
+			res.json(result);
+		});
 	})
 	.catch((err) => {
 		res.send(err);
