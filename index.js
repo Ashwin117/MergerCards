@@ -3,9 +3,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const seedData = require('./actions/seedData');
-const dbActions = require('./actions/dbActions');
-const docActions = require('./actions/docActions');
+const setUpController = require('./controllers/setUpController');
+const decksController = require('./controllers/decksController');
+const usersController = require('./controllers/usersController');
 
 const app = express();
 const PORT = 8080;
@@ -17,44 +17,10 @@ app.listen(PORT, () => {
 	console.log(`Listening on port:${PORT}`);
 });
 
-app.get('/', (req, res) => {
-	Promise.all([seedData.setUpDeck(), seedData.setUpUser()])
-	.then(result => {
-		res.json(result);
-	})
-	.catch(err => {
-		res.send(err);
-	})
-});
+app.get('/', setUpController.setUp);
 
-app.get('/users/:username/decks', (req, res) => {
-	dbActions.getDeckListEndPointByUser(req, res)
-	.then((result) => {
-		res.json(result);
-	})
-	.catch((err) => {
-		res.send(err);
-	})
-});
+app.get('/users/:username/decks', usersController.getDecksByUsername);
 
-app.get('/decks/:id', (req, res) => {
-	dbActions.getSpecifiedDeckEndPoint(req, res)
-	.then((result) => {
-		res.json(result);
-	})
-	.catch((err) => {
-		res.send(err);
-	})
-});
+app.get('/decks/:id', decksController.getDeckById);
 
-app.get('/users/:username/combinedecks', (req, res) => {
-	dbActions.getPagedUserDocumentAndDecks(req, res)
-	.then(docActions.resolveDecksWithDocument())
-	.then(docActions.combineDecksWithDocument())
-	.then((result) => {
-		res.json(result);
-	})
-	.catch((err) => {
-		res.send(err);
-	})
-});
+app.get('/users/:username/combinedecks', usersController.getCombinedDecksByUsername);
