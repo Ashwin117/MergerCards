@@ -9,7 +9,7 @@ let decksLength;
 
 const generateCards = () => {
 	const generatedCards = [];
-	const rand = Math.floor(Math.random() * constants.TOTAL) + 1;
+	const rand = Math.floor(Math.random() * constants.TOTAL_ITEMS_RANGE) + 1;
 	const indexes = generateRandomIndexes(rand);
 
 	indexes.forEach((value) => {
@@ -25,7 +25,7 @@ const generateCards = () => {
 
 const generateDecks = () => {
 	const generatedDecks = [];
-	const rand = Math.floor(Math.random() * constants.TOTAL) + 1;
+	const rand = Math.floor(Math.random() * constants.TOTAL_ITEMS_RANGE) + 1;
 	const indexes = generateRandomIndexes(rand);
 
 	indexes.forEach((value) => {

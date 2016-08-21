@@ -4,10 +4,12 @@ const constants = require('./constants');
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/cardCombine');
 const db = mongoose.connection;
+const responseHandler = require('../controllers/responseHandler');
 
 const getDeckListEndPointByUser = (req, res) => {
 	const pageToken = parseInt(req.query.nextpagetoken || constants.PAGE_LIMIT);
 	const pagination = pageToken <= constants.PAGE_LIMIT ? constants.PAGE_LIMIT : pageToken;
+	
 	return new Promise((resolve, reject) => {
 		db.collections.users.findOne({ userName: req.params.username }, 
 			{ decks: {$slice: [pagination-constants.PAGE_LIMIT, constants.PAGE_LIMIT]} }, (err, result) => {
@@ -42,7 +44,8 @@ const getPagedUserDocumentAndDecks = (req, res) => {
 				promiseDecks.push(getSpecifiedDeckEndPoint(req, res, value.id))
 			});
 			resolve([result, promiseDecks])
-		});
+		})
+		.catch(responseHandler.handleError(res))
 	});
 }
 

@@ -1,6 +1,6 @@
 'use strict';
 
 module.exports = {
-	TOTAL: 25,
+	TOTAL_ITEMS_RANGE: 25,
 	PAGE_LIMIT: 5
 }
