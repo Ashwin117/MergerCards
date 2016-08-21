@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const seedData = require('./actions/seedData');
 const dbActions = require('./actions/dbActions');
+const docActions = require('./actions/docActions');
 
 const app = express();
 const PORT = 8080;
@@ -48,8 +49,8 @@ app.get('/decks/:id', (req, res) => {
 
 app.get('/users/:username/combinedecks', (req, res) => {
 	dbActions.getPagedUserDocumentAndDecks(req, res)
-	.then(dbActions.resolveDecksWithDocument())
-	.then(dbActions.combineDecksWithDocument())
+	.then(docActions.resolveDecksWithDocument())
+	.then(docActions.combineDecksWithDocument())
 	.then((result) => {
 		res.json(result);
 	})
