@@ -33,7 +33,7 @@ const getSpecifiedDeckEndPoint = (req, res, injectedId) => {
 	});
 }
 
-const getPagedUserDecks = (req, res) => {
+const getPagedUserDocumentAndDecks = (req, res) => {
 	return new Promise((resolve, reject) => {
 		getDeckListEndPointByUser(req, res)
 		.then(result => {
@@ -46,29 +46,38 @@ const getPagedUserDecks = (req, res) => {
 	});
 }
 
-const resolveAndCombineDecks = () => {
+const resolveDecksWithDocument = () => {
 	return (result) => {
 		const doc = result[0];
 		const promiseDecks = result[1];
 		return Promise.all(promiseDecks)
 		.then(result => {
-			result.forEach(value => {
-				if (value) {
-					for (let key in doc.decks) {
-						if (doc.decks[key].id === value.id) {
-							doc.decks[key] = value;
-						}
+			return [doc, result]
+		})
+	}
+}
+
+const combineDecksWithDocument = () => {
+	return (result) => {
+		const doc = result[0];
+		const deckList = result[1];
+		deckList.forEach(value => {
+			if (value) {
+				for (let key in doc.decks) {
+					if (doc.decks[key].id === value.id) {
+						doc.decks[key] = value;
 					}
 				}
-			});
-			return doc;
-		})
+			}
+		});
+		return doc;
 	}
 }
 
 module.exports = {
 	getDeckListEndPointByUser,
 	getSpecifiedDeckEndPoint,
-	getPagedUserDecks,
-	resolveCombinedDecks
+	getPagedUserDocumentAndDecks,
+	resolveDecksWithDocument,
+	combineDecksWithDocument
 }

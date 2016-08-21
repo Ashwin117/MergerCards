@@ -47,9 +47,10 @@ app.get('/decks/:id', (req, res) => {
 });
 
 app.get('/users/:username/combinedecks', (req, res) => {
-	dbActions.getPagedUserDecks(req, res)
-	.then(dbActions.resolveCombinedDecks())
-	.then(result => {
+	dbActions.getPagedUserDocumentAndDecks(req, res)
+	.then(dbActions.resolveDecksWithDocument())
+	.then(dbActions.combineDecksWithDocument())
+	.then((result) => {
 		res.json(result);
 	})
 	.catch((err) => {
