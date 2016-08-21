@@ -8,7 +8,7 @@ const userSchema = new Schema({
 	decks: [],
 	id: String,
 	nextPageToken: String,
-	resultSizeEstimate: String 
+	resultSizeEstimate: Number 
 });
 
 const User = mongoose.model('User', userSchema);

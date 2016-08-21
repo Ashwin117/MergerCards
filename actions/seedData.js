@@ -67,7 +67,7 @@ const starterUserDecks = {
 	userName: 'test@example',
 	decks: generateDecks(),
 	nextPageToken: decksLength < 5 ? '0' : constants.PAGE_LIMIT.toString(),
-	resultSizeEstimate: decksLength.toString()
+	resultSizeEstimate: decksLength
 }
 
 module.exports = {

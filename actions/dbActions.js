@@ -5,31 +5,64 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/cardCombine');
 const db = mongoose.connection;
 
-module.exports = {
-	getDeckListEndPointByUser(req, res) {
-		const pageToken = parseInt(req.query.nextpagetoken || constants.PAGE_LIMIT);
-		const pagination = pageToken <= constants.PAGE_LIMIT ? constants.PAGE_LIMIT : pageToken;
-		return new Promise((resolve, reject) => {
-			db.collections.users.findOne({ userName: 'test@example' }, 
-				{ decks: {$slice: [pagination-constants.PAGE_LIMIT, constants.PAGE_LIMIT]} }, (err, result) => {
-				if (err || !result || result.length === 0) {
-					reject(err || 500);
-					return;
-				}
-				result.nextPageToken = (result.decks.length === 1) ? '' : (pagination + 1).toString();
-				resolve(result);
-			});
-		})
-	},
-	getSpecifiedDeckEndPoint(req, res) {
-		return new Promise((resolve, reject) => {
-			db.collections.decks.findOne({id: req.params.id}, (err, result) => {
-				if (err || !result || result.length === 0) {
-					reject(err || 500);
-					return;
-				}
-				resolve(result);
-			});
+const getDeckListEndPointByUser = (req, res) => {
+	const pageToken = parseInt(req.query.nextpagetoken || constants.PAGE_LIMIT);
+	const pagination = pageToken <= constants.PAGE_LIMIT ? constants.PAGE_LIMIT : pageToken;
+	return new Promise((resolve, reject) => {
+		db.collections.users.findOne({ userName: req.params.username }, 
+			{ decks: {$slice: [pagination-constants.PAGE_LIMIT, constants.PAGE_LIMIT]} }, (err, result) => {
+			if (err || !result || result.length === 0) {
+				reject(err || 500);
+				return;
+			}
+			result.nextPageToken = (result.decks.length === 1) ? '' : (pagination + 1).toString();
+			resolve(result);
 		});
-	}
+	})
+}
+
+const getSpecifiedDeckEndPoint = (req, res, injectedId) => {
+	return new Promise((resolve, reject) => {
+		db.collections.decks.findOne({id: req.params.id || injectedId}, (err, result) => {
+			debugger;
+			if (err || !result || result.length === 0) {
+				reject(err || 500);
+				return;
+			}
+			resolve(result);
+		});
+	});
+}
+
+const getPagedUserDecks = (req, res) => {
+	return new Promise((resolve, reject) => {
+		getDeckListEndPointByUser(req, res)
+		.then(result => {
+			let promiseDecks = [];
+			result.decks.forEach((value) => {
+				promiseDecks.push(getSpecifiedDeckEndPoint(req, res, value.id))
+			});
+			resolve(promiseDecks)
+		});
+	});
+}
+
+const resolveDecks = (promiseDecks) => {
+	return new Promise((resolve, reject) => {
+		debugger;
+		Promise.all(promiseDecks)
+		.then(result => {
+			debugger;
+		})
+		.catch(err => {
+			debugger;
+		})
+	});
+}
+
+module.exports = {
+	getDeckListEndPointByUser,
+	getSpecifiedDeckEndPoint,
+	getPagedUserDecks,
+	resolveDecks
 }
