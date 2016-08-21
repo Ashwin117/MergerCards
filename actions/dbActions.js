@@ -3,7 +3,7 @@
 const constants = require('./constants');
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/cardCombine');
-const db = mongoose.connection;
+let db = mongoose.connection;
 const responseHandler = require('../controllers/responseHandler');
 
 const getDeckListEndPointByUser = (req, res) => {
@@ -13,7 +13,7 @@ const getDeckListEndPointByUser = (req, res) => {
 	return new Promise((resolve, reject) => {
 		db.collections.users.findOne({ userName: req.params.username }, 
 			{ decks: {$slice: [pagination-constants.PAGE_LIMIT, constants.PAGE_LIMIT]} }, (err, result) => {
-			if (err || !result || result.length === 0) {
+			if (err || !result || !result.decks) {
 				reject(err || 404);
 				return;
 			}
@@ -25,7 +25,7 @@ const getDeckListEndPointByUser = (req, res) => {
 
 const getSpecifiedDeckEndPoint = (req, res, injectedId) => {
 	return new Promise((resolve, reject) => {
-		db.collections.decks.findOne({id: req.params.id || injectedId}, (err, result) => {
+		db.collections.decks.findOne({id: injectedId || req.params.id}, (err, result) => {
 			if (err) {
 				reject(err);
 				return;

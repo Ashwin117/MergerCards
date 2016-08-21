@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  	"start": "node index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index",
+    "test": "mocha --recursive",
+    "coverage": "istanbul cover _mocha test/*"
   },
   "author": "Ashwin Sundar",
   "license": "ISC",
@@ -14,5 +15,12 @@
     "express": "^4.14.0",
     "mongoose": "^4.5.9",
     "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.0.2",
+    "rewire": "^2.5.2",
+    "sinon": "^1.17.5"
   }
 }
