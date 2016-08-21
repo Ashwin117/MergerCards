@@ -46,20 +46,24 @@ const getPagedUserDecks = (req, res) => {
 	});
 }
 
-const resolveCombinedDecks = (doc, promiseDecks) => {
-	return Promise.all(promiseDecks)
-	.then(result => {
-		result.forEach(value => {
-			if (value) {
-				for (let key in doc.decks) {
-					if (doc.decks[key].id === value.id) {
-						doc.decks[key] = value;
+const resolveAndCombineDecks = () => {
+	return (result) => {
+		const doc = result[0];
+		const promiseDecks = result[1];
+		return Promise.all(promiseDecks)
+		.then(result => {
+			result.forEach(value => {
+				if (value) {
+					for (let key in doc.decks) {
+						if (doc.decks[key].id === value.id) {
+							doc.decks[key] = value;
+						}
 					}
 				}
-			}
-		});
-		return doc;
-	})
+			});
+			return doc;
+		})
+	}
 }
 
 module.exports = {
