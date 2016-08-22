@@ -4,7 +4,7 @@ This is a pure back-end only API that allows getting json documents from the dat
 
 ###Getting Started###
 
-Here are the commands to start this app after cloning this repo. Please use node 4 as the repo is littered with ES6.
+Here are the commands to start this app after cloning this project. Please use node 4 as the project is littered with ES6.
 
 First, run a local instance of MongoDB in another terminal
 
@@ -119,8 +119,16 @@ is 5. So, we are viewing [7-5, 5] decks (skipping 2 elements and getting the nex
 * GET /users/{username}/combinedecks?nextpagetoken=7:
 For any given query, at the most, the number of pages (as specified by the constant `PAGE_LIMIT`) is 5. So, these 5 decks are queried to see if they have any cards associated with them. If yes, then they are combined into the result and displayed. 5 queries is not heavy for the server.
 
+###Tests###
+This project has some unit tests. The files that have been tested has 100% code coverage. You can run these commands to check it out:
+```
+    > npm test
+    > npm run coverage
+```
+However, ideally, every dev file should have a corresponding unit test file. Unfortunately, time does not permit this.
 
 ###Cool features of this app###
 1. Uses `mongodb` as the database for storage and `mongoose` to communicate with it.
 1. Uses ES6 for writing code as smoothly as possible.
 1. Uses Promises everywhere! The controllers file is so beautiful and easy to understand
+1. Uses `sinon`, `rewire`, and `mocha` for unit testing along with `istanbul` for looking at code coverage.
