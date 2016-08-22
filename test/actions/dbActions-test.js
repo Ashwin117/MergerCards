@@ -151,4 +151,52 @@ describe('DB Actions', () => {
 			});
 		});
 	});
+	describe('Get paged user document and decks', () => {
+		let req;
+		let dbMock;
+		beforeEach(() => {
+			req = {
+				params: {
+					id: '117'
+				},
+				query: {}
+			}
+			dbMock = {
+				collections: {
+					users: {
+						findOne: () => {}
+					},
+					decks: {
+						findOne: () => {}
+					}
+				}
+			}
+		});
+		it('Should return with a document from getDeckListEndPointByUser', (done) => {
+			const db = dbActions.__get__('db');
+			dbMock.collections.users.findOne = sinon.stub(dbMock.collections.users, 'findOne');
+			dbMock.collections.users.findOne.callsArgWith(2, null, {decks: [1, 2, 3]});
+			dbActions.__set__({ 'db': dbMock });
+			dbActions.getPagedUserDocumentAndDecks(req, {})
+			.then((result) => {
+				expect(result[0]).to.deep.equal({ decks: [ 1, 2, 3 ], nextPageToken: '6' })
+				dbActions.__set__({ 'db': db });
+				done();
+			});
+		});
+		it('Should return with an array of promises', (done) => {
+			const db = dbActions.__get__('db');
+			dbMock.collections.users.findOne = sinon.stub(dbMock.collections.users, 'findOne');
+			dbMock.collections.users.findOne.callsArgWith(2, null, {decks: [1, 2, 3]});
+			dbActions.__set__({ 'db': dbMock });
+			dbActions.getPagedUserDocumentAndDecks(req, {})
+			.then((result) => {
+				expect(result[1][0] instanceof Promise).to.be.true;
+				expect(result[1][1] instanceof Promise).to.be.true;
+				expect(result[1][2] instanceof Promise).to.be.true;
+				dbActions.__set__({ 'db': db });
+				done();
+			});
+		});
+	});
 });
